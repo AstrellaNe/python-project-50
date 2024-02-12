@@ -1,4 +1,4 @@
-from old_ver.generate_diff import generate_diff
+from gendiff.scripts.gendiff import generate_diff
 
 def test_no_file():
     """Проверка поведения функции при отсутствии файла."""

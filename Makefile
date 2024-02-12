@@ -22,6 +22,9 @@ generate-diff:
 lint:	
 	poetry run flake8
 
+selfcheck:
+	poetry check
+
 git-prepare:
 	make build
 	make package-reinstall
