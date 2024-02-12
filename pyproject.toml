@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "hexlet-code"
+version = "0.1.0"
+description = "Diff Parser"
+authors = ["Astrella.Ne <mycuttingapp@gmail.com>"]
+readme = "README.md"
+packages = [
+  { include = "gendiff" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flake8 = "^7.0.0"
+asciinema = "^2.4.0"
+pytest = "^8.0.0"
+
+
+[tool.poetry.scripts]
+gendiff = "gendiff.scripts.gendiff:main"
+generate_diff = "gendiff.generate_diff:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
