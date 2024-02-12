@@ -2,9 +2,9 @@ name: my-tests
 
 on:
   push:
-    jobs:
+
+jobs:
       linter_run:
         runs-on: ubuntu-latest
-
         steps:
-          run: make lint
+          - run: make lint
