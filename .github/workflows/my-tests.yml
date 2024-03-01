@@ -36,9 +36,9 @@ jobs:
         make lint
 
     # Запуск тестов и запись кода завершения
-    - name: Run pytest and record exit status
+    - name: Run pytest
       run: |
-            poetry run pytest
+            make test
 
     - name: Test & publish code coverage
       uses: paambaati/codeclimate-action@v5.0.0

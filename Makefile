@@ -22,8 +22,8 @@ generate-diff:
 lint:	
 	poetry run flake8
 
-check:
-	po
+test:
+	poetry run pytest
 
 selfcheck:
 	poetry check
