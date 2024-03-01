@@ -26,8 +26,10 @@ jobs:
     - name: Run make lint
       run: make lint
 
-    - name: Run pytest
-      run: poetry run pytest
+    - name: Run pytest and record exit status
+      run: |
+        poetry run pytest --cov=gendiff --cov-report xml
+        echo "PYTEST_EXIT_CODE=$?" > $GITHUB_ENV
 
     # Установка Code Climate test reporter
     - name: Set up Code Climate test reporter
@@ -37,11 +39,9 @@ jobs:
         ./cc-test-reporter before-build
 
     # Тесты и публикация покрытия кода
-    # Через прямой вызов скрипта после тестов
     - name: Test & publish code coverage
       if: github.ref_name == 'main'
       run: |
-        make test-coverage
-        ./cc-test-reporter after-build --exit-code ${{ job.status }} -t coverage.py
+        ./cc-test-reporter after-build --exit-code ${{ env.PYTEST_EXIT_CODE }} -t coverage.py
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
