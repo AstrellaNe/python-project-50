@@ -27,6 +27,7 @@ selfcheck:
 
 test-coverage:
 	poetry run pytest --cov=python_project_50 --cov-report xml
+	cc-test-reporter after-build -t coverage.py
 
 git-prepare:
 	make build
