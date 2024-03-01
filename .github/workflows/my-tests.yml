@@ -6,10 +6,22 @@ on:
       - main
 
 jobs:
-  linter_run:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Run linter
-        run: make lint
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2 
+
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        source $HOME/.poetry/env
+
+    - name: Install dependencies
+      run: poetry install
+
+    - name: Run make lint
+      run: make lint
