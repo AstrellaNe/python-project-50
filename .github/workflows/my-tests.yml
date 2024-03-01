@@ -18,7 +18,7 @@ jobs:
     - name: Install Poetry
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
-        export PATH="$HOME/.local/bin:$PATH"
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     - name: Install dependencies
       run: poetry install
@@ -30,11 +30,21 @@ jobs:
       run: |
         poetry run pytest
 
+    # установка Code Climate test reporter
+    - name: Set up Code Climate test reporter
+      run: |
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x ./cc-test-reporter
+        ./cc-test-reporter before-build
+
+    # тесты и публикация покрытия кода
+    # через прямой вызов скрипта после тестов
     - name: Test & publish code coverage
-      uses: paambaati/codeclimate-action@v5.0.0
       if: github.ref_name == 'main'
+      run: |
+        make test-coverage
+        ./cc-test-reporter after-build --exit-code ${{ job.status }} -t coverage.py
       env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
       with:
-          coverageCommand: make test-coverage
           debug: true
