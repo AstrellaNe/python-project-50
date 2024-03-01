@@ -38,27 +38,13 @@ jobs:
     # Запуск тестов и запись кода завершения
     - name: Run pytest and record exit status
       run: |
-        # Запускаем тесты и создаем отчет о покрытии кода
-        poetry run pytest --cov=gendiff --cov-report xml
-        # Сохраняем код завершения pytest для использования в последующих шагах
-        echo "PYTEST_EXIT_CODE=$?" > $GITHUB_ENV
+            poetry run pytest
 
-    # Настройка Code Climate test reporter
-    - name: Set up Code Climate test reporter
-      run: |
-        # Скачиваем Code Climate test reporter
-        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-        # Делаем скачанный файл исполняемым
-        chmod +x ./cc-test-reporter
-        # Инициализируем отчетность перед выполнением тестов
-        ./cc-test-reporter before-build
-
-    # Отправка данных о покрытии кода
     - name: Test & publish code coverage
+      uses: paambaati/codeclimate-action@v5.0.0
       if: github.ref_name == 'main'
-      run: |
-        # Запускаем Code Climate test reporter после выполнения тестов для отправки данных о покрытии кода
-        ./cc-test-reporter after-build --exit-code ${{ env.PYTEST_EXIT_CODE }} -t coverage.py
       env:
-        # Устанавливаем ID репортера из секретов репозитория
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      with:
+          coverageCommand: make test-coverage
+          debug: true
