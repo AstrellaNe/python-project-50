@@ -1,7 +1,7 @@
 # Импортируем необходимые модули
 import json
 import tempfile
-from gendiff.scripts.gendiff import generate_diff  # Импортируем функцию
+from gendiff.gendiff import generate_diff  # Импортируем функцию
 
 def test_no_file():
     """Проверка поведения функции при отсутствии файла."""
