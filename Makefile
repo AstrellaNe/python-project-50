@@ -25,6 +25,9 @@ lint:
 selfcheck:
 	poetry check
 
+pytest:
+	pytest
+
 git-prepare:
 	make build
 	make package-reinstall
