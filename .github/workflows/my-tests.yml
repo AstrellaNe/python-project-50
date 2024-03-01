@@ -2,9 +2,14 @@ name: my-tests
 
 on:
   push:
+    branches:
+      - main
 
 jobs:
-      linter_run:
-        runs-on: ubuntu-latest
-        steps:
-          - run: make lint
+  linter_run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run linter
+        run: make lint
