@@ -25,8 +25,8 @@ lint:
 selfcheck:
 	poetry check
 
-pytest:
-	pytest
+test-coverage:
+	poetry run pytest --cov=hexlet_python_package --cov-report xml
 
 git-prepare:
 	make build
