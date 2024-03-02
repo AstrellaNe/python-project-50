@@ -10,7 +10,8 @@ def test_no_file():
     path_to_nonexistent_file2 = 'nonexistent_file2.json'
     # Проверяем, что функция возвращает None, если файлы не существуют
     assert generate_diff(path_to_nonexistent_file1, path_to_nonexistent_file2) is None
-    
+ 
+   
 def test_generate_diff():
     """Проверка работы функции на различных файлах."""
     # Создаем временные файлы с тестовыми данными
@@ -53,21 +54,40 @@ def test_added_data():
 
 def test_removed_data():
     """Тестирование при удалении данных из второго файла."""
-    with tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp1, tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp2:
+    # Создаем два временных файла
+    with tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp1, \
+         tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp2:
+        
+        # Записываем JSON данные в первый временный файл. Данные включают ключ 'to_remove'.
         json.dump({"key": "value", "to_remove": "gone"}, temp1)
+        # Записываем измененные JSON данные во второй временный файл без ключа 'to_remove'.
         json.dump({"key": "value"}, temp2)
+        # Проверяем, что данные полностью записаны в файлы.
         temp1.flush()
         temp2.flush()
+
+        # Формируем ожидаемый результат сравнения, который указывает,
+        # что данные были удалены из второго файла.
         expected_output = "{\n  key: value\n- to_remove: gone\n}"
+
         assert generate_diff(temp1.name, temp2.name) == expected_output
 
 
 def test_different_types():
     """Тестирование при изменении типов данных между файлами."""
-    with tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp1, tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp2:
+    # Создаем два временных файла. Файлы автоматически удалятся после завершения блока.
+    with tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp1, \
+         tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp2:
+        
+        # Записываем JSON данные в первый temp.
         json.dump({"key": "value", "to_change": "string"}, temp1)
+        # Записываем измененные JSON данные во второй temp
         json.dump({"key": "value", "to_change": ["list"]}, temp2)
+        # Убед;lftvcz, что данные полностью записаны в файлы.
         temp1.flush()
         temp2.flush()
+
+        # ожидаемый результат
         expected_output = "{\n  key: value\n- to_change: string\n+ to_change: ['list']\n}"
+        
         assert generate_diff(temp1.name, temp2.name) == expected_output
