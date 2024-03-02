@@ -30,3 +30,44 @@ def test_generate_diff():
 + name: Alice
 }"""
         assert generate_diff(temp1.name, temp2.name) == expected_output
+
+
+def test_identical_files():
+    """Тестирование с двумя идентичными файлами."""
+    with tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp:
+        json.dump({"key": "value"}, temp)
+        temp.flush()
+        assert generate_diff(temp.name, temp.name) == '{\n  key: value\n}'
+
+
+def test_added_data():
+    """Тестирование при добавлении данных во второй файл."""
+    with tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp1, tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp2:
+        json.dump({"key": "value"}, temp1)
+        json.dump({"key": "value", "new_key": "new_value"}, temp2)
+        temp1.flush()
+        temp2.flush()
+        expected_output = "{\n  key: value\n+ new_key: new_value\n}"
+        assert generate_diff(temp1.name, temp2.name) == expected_output
+
+
+def test_removed_data():
+    """Тестирование при удалении данных из второго файла."""
+    with tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp1, tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp2:
+        json.dump({"key": "value", "to_remove": "gone"}, temp1)
+        json.dump({"key": "value"}, temp2)
+        temp1.flush()
+        temp2.flush()
+        expected_output = "{\n  key: value\n- to_remove: gone\n}"
+        assert generate_diff(temp1.name, temp2.name) == expected_output
+
+
+def test_different_types():
+    """Тестирование при изменении типов данных между файлами."""
+    with tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp1, tempfile.NamedTemporaryFile('w', delete=False, suffix='.json') as temp2:
+        json.dump({"key": "value", "to_change": "string"}, temp1)
+        json.dump({"key": "value", "to_change": ["list"]}, temp2)
+        temp1.flush()
+        temp2.flush()
+        expected_output = "{\n  key: value\n- to_change: string\n+ to_change: ['list']\n}"
+        assert generate_diff(temp1.name, temp2.name) == expected_output
