@@ -34,23 +34,30 @@ def generate_diff(file_path1: str, file_path2: str) -> str:
     data1, data2 = _load_json_file(file_path1), _load_json_file(file_path2)
     if data1 is None or data2 is None:
         return  # Если один из файлов не найден - не продолжаем.
+    
+    return format_diff(_create_diff(data1, data2))
 
+
+def _create_diff(data1: Dict, data2: Dict) -> Dict[str, Dict[str, Any]]:
+    """Создает и возвращает словарь различий между двумя словарями."""
     diff = {}  # пустой словарь для хранения результатов сравнения.
+    all_keys = set(data1) | set(data2)
 
-    # Создаем множество уникальных ключей из обоих словарей.
-    for key in set(data1) | set(data2):
-        # Если ключ в обоих словарях
-        if key in data1 and key in data2:
-            diff[key] = _compare_values(data1[key], data2[key])
-        # Если только в первом словаре - помечаем как удаленный.
-        elif key in data1:
-            diff[key] = {'status': 'removed', 'value': data1[key]}
-        # Если во втором словаре, помечаем как добавленный.
-        else:
-            diff[key] = {'status': 'added', 'value': data2[key]}
+    for key in all_keys:
+        diff[key] = _get_key_diff(data1, data2, key)
+    
+    return diff
 
-    # Форматируем словарь различий в строку для вывода.
-    return format_diff(diff)
+
+def _get_key_diff(data1: Dict, data2: Dict, key: str) -> Dict[str, Any]:
+    """Возвращает различие для конкретного ключа между двумя словарями."""
+    if key in data1 and key in data2:
+        return _compare_values(data1[key], data2[key])
+    elif key in data1:
+        return {'status': 'removed', 'value': data1[key]}
+    elif key in data2:
+        return {'status': 'added', 'value': data2[key]}
+
 
 
 def format_diff(diff: Dict[str, Dict[str, Any]]) -> str:
@@ -76,17 +83,22 @@ def format_diff(diff: Dict[str, Dict[str, Any]]) -> str:
 
 def format_change(key: str, details: Dict[str, Any], status: str) -> list:
     """Возвращает список строк, описывающих изменение для одного ключа."""
-    if status == 'unchanged':
-        return [f'  {key}: {details["value"]}']
-    elif status == 'changed':
-        return [f'- {key}: {details["old_value"]}',
-                f'+ {key}: {details["new_value"]}']
-    elif status == 'removed':
-        return [f'- {key}: {details["value"]}']
-    elif status == 'added':
-        return [f'+ {key}: {details["value"]}']
+    change_lines = []  # список для хранения измененных строк.
 
-    return []
+    # в зависимости от статуса - добавляет соответв. строки в change_lines.
+    if status == 'unchanged':
+        change_lines.append(f'  {key}: {details["value"]}')
+    elif status == 'changed':
+        change_lines.append(f'- {key}: {details["old_value"]}')
+        change_lines.append(f'+ {key}: {details["new_value"]}')
+    elif status == 'removed':
+        change_lines.append(f'- {key}: {details["value"]}')
+    elif status == 'added':
+        change_lines.append(f'+ {key}: {details["value"]}')
+
+    # возвращаем видоизмененные строки
+    return change_lines
+
 
 
 # Отладка
