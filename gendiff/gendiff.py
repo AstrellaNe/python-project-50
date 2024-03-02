@@ -34,7 +34,7 @@ def generate_diff(file_path1: str, file_path2: str) -> str:
     data1, data2 = _load_json_file(file_path1), _load_json_file(file_path2)
     if data1 is None or data2 is None:
         return  # Если один из файлов не найден - не продолжаем.
-    
+
     return format_diff(_create_diff(data1, data2))
 
 
@@ -45,7 +45,7 @@ def _create_diff(data1: Dict, data2: Dict) -> Dict[str, Dict[str, Any]]:
 
     for key in all_keys:
         diff[key] = _get_key_diff(data1, data2, key)
-    
+
     return diff
 
 
@@ -57,7 +57,6 @@ def _get_key_diff(data1: Dict, data2: Dict, key: str) -> Dict[str, Any]:
         return {'status': 'removed', 'value': data1[key]}
     elif key in data2:
         return {'status': 'added', 'value': data2[key]}
-
 
 
 def format_diff(diff: Dict[str, Dict[str, Any]]) -> str:
@@ -98,7 +97,6 @@ def format_change(key: str, details: Dict[str, Any], status: str) -> list:
 
     # возвращаем видоизмененные строки
     return change_lines
-
 
 
 # Отладка
