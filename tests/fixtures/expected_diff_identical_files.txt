@@ -1,0 +1,5 @@
+{
+  key: value
+  to_change: string
+  to_remove: gone
+}

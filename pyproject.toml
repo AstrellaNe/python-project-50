@@ -17,8 +17,8 @@ codeclimate-test-reporter = "^0.2.3"
 
 
 [tool.poetry.scripts]
-gendiff = "gendiff.gendiff:main"
-generate_diff = "gendiff.generate_diff:main"
+gendiff = "gendiff.scripts.gendiff:main"
+generate_diff = "gendiff.scripts.generate_diff:main"
 cli = "gendiff.scripts.cli:main"
 
 [tool.poetry.group.dev.dependencies]
