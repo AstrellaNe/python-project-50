@@ -2,45 +2,53 @@
 
 import argparse
 import json
-import sys
-from typing import Any, Dict
+# import sys
+import yaml  # Импортируем библиотеку yaml
+from typing import Any, Dict, Optional
 
 
-def _load_json_file(file_path: str) -> Dict:
+def _load_file(file_path: str) -> Optional[Dict]:
     """
-       Загружает и возвращает данные из JSON-файла.
-       Обрабатываем ошибки сразу. Потом можно добавить еще.
-       Функция неявная, чтобы защитить использование файлов.
+    Загружает и возвращает данные из файла JSON или YAML
+    в зависимости от расширения файла и корректно обрабатывает ошибки.
+    Функция объявлена как приватная для ограничения использования файлов.
     """
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
-            return json.load(file)
+            if file_path.endswith('.json'):
+                return json.load(file)
+            elif file_path.endswith('.yaml') or file_path.endswith('.yml'):
+                return yaml.safe_load(file)
+            else:
+                print(f"Неподдерживаемый тип файла: {file_path}")
+                return None
     except FileNotFoundError:
         print(f"Файл {file_path} не найден.")
         return None
-    except json.JSONDecodeError:
-        print(f"Ошибка декодирования JSON в файле {file_path}.")
-        return {}
+    except (json.JSONDecodeError, yaml.YAMLError) as e:
+        print(f"Ошибка при декодировании файла {file_path}: {e}")
+        return None
 
 
 def _compare_values(value1: Any, value2: Any) -> Dict[str, Any]:
-    """Возвращает словарь c результатом сравнения двух значений."""
+    """Возвращает словарь с результатами сравнения двух значений."""
     if value1 == value2:
         return {'status': 'unchanged', 'value': value1}
     return {'status': 'changed', 'old_value': value1, 'new_value': value2}
 
 
-def generate_diff(file_path1: str, file_path2: str) -> str:
-    data1, data2 = _load_json_file(file_path1), _load_json_file(file_path2)
+def generate_diff(file_path1: str, file_path2: str) -> Optional[str]:
+    data1, data2 = _load_file(file_path1), _load_file(file_path2)
     if data1 is None or data2 is None:
-        return  # Если один из файлов не найден - не продолжаем.
+        return None
+    # Если один из файлов загружен некорректно, прерываем выполнение.
 
     return format_diff(_create_diff(data1, data2))
 
 
 def _create_diff(data1: Dict, data2: Dict) -> Dict[str, Dict[str, Any]]:
     """Создает и возвращает словарь различий между двумя словарями."""
-    diff = {}  # пустой словарь для хранения результатов сравнения.
+    diff = {}
     all_keys = set(data1) | set(data2)
 
     for key in all_keys:
@@ -60,31 +68,17 @@ def _get_key_diff(data1: Dict, data2: Dict, key: str) -> Dict[str, Any]:
 
 
 def format_diff(diff: Dict[str, Dict[str, Any]]) -> str:
-    """
-       Вспомогательная функция
-       Форматирует различия в удобочитаемую строку.
-    """
-    lines = []  # список строк, который хранит отформатированные различия.
-
-    # Перебираем отсортированные по ключам элементы словаря различий.
+    """Форматирует различия в строку, удобную для чтения человеком."""
+    lines = []
     for key, details in sorted(diff.items()):
-        # статус различия текущего ключа (добав., удал., изм.)
         status = details['status']
-
-        # format_change для получения строк описания изменений
-        # добавляем их в список строк.
         lines.extend(format_change(key, details, status))
-
-    # Соединяем все строки из списка в одну строку, обрамляем скобками под JS.
-    # Каждая строка переносится.
-    return ('{\n' + '\n'.join(lines) + '\n}')
+    return '{\n' + '\n'.join(lines) + '\n}'
 
 
 def format_change(key: str, details: Dict[str, Any], status: str) -> list:
-    """Возвращает список строк, описывающих изменение для одного ключа."""
-    change_lines = []  # список для хранения измененных строк.
-
-    # в зависимости от статуса - добавляет соответв. строки в change_lines.
+    """Возвращает список строк, описывающих изменения для одного ключа."""
+    change_lines = []
     if status == 'unchanged':
         change_lines.append(f'  {key}: {details["value"]}')
     elif status == 'changed':
@@ -94,42 +88,18 @@ def format_change(key: str, details: Dict[str, Any], status: str) -> list:
         change_lines.append(f'- {key}: {details["value"]}')
     elif status == 'added':
         change_lines.append(f'+ {key}: {details["value"]}')
-
-    # возвращаем видоизмененные строки
     return change_lines
-
-
-# Отладка
-# def main():
-    file1 = 'fil67e1.json'
-    file2 = 'fil32.json'
-    diff = generate_diff(file1, file2)
-    print(diff)
-    file1 = 'file1.json'
-    file2 = 'file2.json'
-    diff = generate_diff(file1, file2)
-    print(diff)
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Compares two configuration files and shows a difference.')
-    parser.add_argument('first_file', help='first file to compare')
-    parser.add_argument('second_file', help='second file to compare')
-    parser.add_argument('-f', '--format', help='set format of output',
-                        default='stylish')
-
+        description='Сравнивает два файла конфигурации и показывает разницу.')
+    parser.add_argument('first_file', help='первый файл для сравнения')
+    parser.add_argument('second_file', help='второй файл для сравнения')
     args = parser.parse_args()
-    file1 = sys.argv[1]
-    file2 = sys.argv[2]
 
-    # Проверяем, предоставлены ли оба файла перед выполнением сравнения
-    if args.first_file is None or args.second_file is None:
-        parser.print_usage()  # краткая справка, если файлы не указаны
-        sys.exit(1)
-
-    diff = generate_diff(file1, file2)
-    if diff is not None:
+    diff = generate_diff(args.first_file, args.second_file)
+    if diff:
         print(diff)
 
 
