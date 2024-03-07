@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-import argparse
 import json
 # import sys
 import yaml  # Импортируем библиотеку yaml
 from typing import Any, Dict, Optional
+from gendiff.scripts.arg_parser import parse_arguments  # парсер отдельно
 
 
 def _load_file(file_path: str) -> Optional[Dict]:
@@ -92,12 +92,7 @@ def format_change(key: str, details: Dict[str, Any], status: str) -> list:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Сравнивает два файла конфигурации и показывает разницу.')
-    parser.add_argument('first_file', help='первый файл для сравнения')
-    parser.add_argument('second_file', help='второй файл для сравнения')
-    args = parser.parse_args()
-
+    args = parse_arguments()
     diff = generate_diff(args.first_file, args.second_file)
     if diff:
         print(diff)
