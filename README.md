@@ -6,5 +6,8 @@
 
 ## Видео с примерами работы пакета
 
-**Простое сравнение двух файлов формат JSON**
+**Простое сравнение двух файлов формат JSON и вызов помощи**
 [![asciicast](https://asciinema.org/a/DfCMzLrpG3Gc2JdQ4WinhhCPD.svg)](https://asciinema.org/a/DfCMzLrpG3Gc2JdQ4WinhhCPD)
+
+**Cравнение двух плоских файлов формата YAML, случай файл не найден (+ формат JSON)**
+[![asciicast](https://asciinema.org/a/cIO7yVg654FZzgUvCy3xPdyfp.svg)](https://asciinema.org/a/cIO7yVg654FZzgUvCy3xPdyfp)
