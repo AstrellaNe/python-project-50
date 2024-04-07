@@ -11,3 +11,8 @@
 
 **Cравнение двух плоских файлов формата YAML, случай файл не найден (+ формат JSON)**
 [![asciicast](https://asciinema.org/a/cIO7yVg654FZzgUvCy3xPdyfp.svg)](https://asciinema.org/a/cIO7yVg654FZzgUvCy3xPdyfp)
+
+
+Пока инструкция на будущее без форматирования
+loader - модуль, ответственный за загрузку и возврат данных из файлов
+stylish - форматтер для вывода красивого дерева различий

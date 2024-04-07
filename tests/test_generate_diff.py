@@ -1,5 +1,21 @@
 import pytest
 from gendiff.scripts.gendiff import generate_diff
+from gendiff.formatters.stylish import _format_tree
+
+
+@pytest.mark.parametrize("original_file, changed_file, expected_file", [
+    ("original_data.json", "changed_data.json", "expected_diff_original_changed.txt"),
+    ("original_data.yaml", "changed_data.yml", "expected_diff_original_changed.txt"),
+    # Примеры для JSON и YAML файлов
+])
+
+def test_generate_diff(original_file, changed_file, expected_file, fixtures_dir):
+    with open(f'{fixtures_dir}/{expected_file}', 'r') as file:
+        expected_diff = file.read().strip()
+    diff = generate_diff(f'{fixtures_dir}/{original_file}', f'{fixtures_dir}/{changed_file}')
+    formatted_actual_diff = _format_tree(diff).strip()  # Применение форматирования к фактическому результату
+    assert formatted_actual_diff == expected_diff, f"Expected:\n{expected_diff}\nActual:\n{formatted_actual_diff}"
+
 
 def test_no_file():
     """Проверка поведения функции при отсутствии файла."""
@@ -7,15 +23,6 @@ def test_no_file():
     path_to_nonexistent_file2 = 'nonexistent_file2.json'
     assert generate_diff(path_to_nonexistent_file1, path_to_nonexistent_file2) is None
 
-@pytest.mark.parametrize("original_file, changed_file, expected_file", [
-    ("original_data.json", "changed_data.json", "expected_diff_original_changed.txt"),
-    ("original_data.yaml", "changed_data.yml", "expected_diff_original_changed.txt"),  # YAML files
-])
-def test_generate_diff(original_file, changed_file, expected_file, fixtures_dir):
-    """Проверка работы функции на различных файлах."""
-    with open(f'{fixtures_dir}/{expected_file}', 'r') as file:
-        expected_diff = file.read()
-    assert generate_diff(f'{fixtures_dir}/{original_file}', f'{fixtures_dir}/{changed_file}') == expected_diff
 
 @pytest.mark.parametrize("original_file, expected_file", [
     ("original_data.json", "expected_diff_identical_files.txt"),
