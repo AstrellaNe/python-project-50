@@ -15,12 +15,20 @@ def parse_arguments():
 
 
 def main():
+    # Парсинг аргументов командной строки
     args = parse_arguments()
+
     diff = generate_diff(args.file_path1, args.file_path2)
 
+    if diff is None:
+        print("Ошибка: Не удалось сгенерировать различия между файлами. "
+              "Проверьте пути и доступность файлов.")
+        return
+
+    # Форматирование различий в зависимости от выбранного формата
     if args.format == 'plain':
         formatted_diff = format_plain(diff)
-    else:  # Default - stylish если другой не выбран
+    else:  # По умолчанию используется формат "stylish"
         formatted_diff = format_stylish(diff)
 
     print(formatted_diff)

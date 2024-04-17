@@ -1,27 +1,32 @@
+import os
 import pytest
 from gendiff.scripts.gendiff import generate_diff
-from gendiff.formatters.stylish import _format_tree
+from gendiff.formatters.stylish import _format_tree as format_stylish
 
+# Вспомогательная функция для загрузки ожидаемого вывода
+def load_expected_output(fixtures_dir, filename):
+    file_path = os.path.join(fixtures_dir, filename)
+    with open(file_path, 'r') as file:
+        return file.read().strip()
 
 @pytest.mark.parametrize("original_file, changed_file, expected_file", [
     ("original_data.json", "changed_data.json", "expected_diff_original_changed.txt"),
     ("original_data.yaml", "changed_data.yml", "expected_diff_original_changed.txt"),
-    # Примеры для JSON и YAML файлов
+    # Примеры для файлов JSON и YAML
 ])
-
 def test_generate_diff(original_file, changed_file, expected_file, fixtures_dir):
-    with open(f'{fixtures_dir}/{expected_file}', 'r') as file:
-        expected_diff = file.read().strip()
-    diff = generate_diff(f'{fixtures_dir}/{original_file}', f'{fixtures_dir}/{changed_file}')
-    formatted_actual_diff = _format_tree(diff).strip()  # Применение форматирования к фактическому результату
-    assert formatted_actual_diff == expected_diff, f"Expected:\n{expected_diff}\nActual:\n{formatted_actual_diff}"
-
+    """Тестирует диффер между двумя файлами."""
+    expected_diff = load_expected_output(fixtures_dir, expected_file)
+    diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, changed_file))
+    formatted_actual_diff = format_stylish(diff).strip()
+    assert formatted_actual_diff == expected_diff
 
 def test_no_file():
-    """Проверка поведения функции при отсутствии файла."""
+    """Тест при попытке обработки несуществующих файлов. Проверяет, что функция возвращает None."""
     path_to_nonexistent_file1 = 'nonexistent_file1.json'
     path_to_nonexistent_file2 = 'nonexistent_file2.json'
-    assert generate_diff(path_to_nonexistent_file1, path_to_nonexistent_file2) is None
+    result = generate_diff(path_to_nonexistent_file1, path_to_nonexistent_file2)
+    assert result is None, "Ожидалось, что функция вернёт None для несуществующих файлов"
 
 
 @pytest.mark.parametrize("original_file, expected_file", [
@@ -29,37 +34,52 @@ def test_no_file():
     ("original_data.yaml", "expected_diff_identical_files.txt"),  # YAML file
 ])
 def test_identical_files(original_file, expected_file, fixtures_dir):
-    """Тестирование двух идентичных файлов."""
-    with open(f'{fixtures_dir}/{expected_file}', 'r') as file:
-        expected_diff = file.read()
-    assert generate_diff(f'{fixtures_dir}/{original_file}', f'{fixtures_dir}/{original_file}') == expected_diff
+    """Тестирует случай с двумя идентичными файлами."""
+    expected_diff = load_expected_output(fixtures_dir, expected_file)
+    actual_diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, original_file))
+    formatted_actual_diff = format_stylish(actual_diff)  # Apply formatting to the result
+    assert formatted_actual_diff == expected_diff
 
 @pytest.mark.parametrize("original_file, changed_file, expected_file", [
     ("original_data.json", "changed_data.json", "expected_diff_added_data.txt"),
     ("original_data.yaml", "changed_data.yml", "expected_diff_added_data.txt"),  # YAML files
 ])
 def test_added_data(original_file, changed_file, expected_file, fixtures_dir):
-    """Тестирование при добавлении данных во второй файл."""
-    with open(f'{fixtures_dir}/{expected_file}', 'r') as file:
-        expected_diff = file.read()
-    assert generate_diff(f'{fixtures_dir}/{original_file}', f'{fixtures_dir}/{changed_file}') == expected_diff
+    """Тестирует добавление данных во второй файл."""
+    expected_diff = load_expected_output(fixtures_dir, expected_file)
+    actual_diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, changed_file))
+    formatted_actual_diff = format_stylish(actual_diff).strip()  # Apply formatting to the result
+    assert formatted_actual_diff == expected_diff
 
 @pytest.mark.parametrize("original_file, reduced_file, expected_file", [
     ("original_data.json", "reduced_data.json", "expected_diff_removed_data.txt"),
     ("original_data.yaml", "reduced_data.yaml", "expected_diff_removed_data.txt"),  # YAML files
 ])
 def test_removed_data(original_file, reduced_file, expected_file, fixtures_dir):
-    """Тестирование при удалении данных из второго файла."""
-    with open(f'{fixtures_dir}/{expected_file}', 'r') as file:
-        expected_diff = file.read()
-    assert generate_diff(f'{fixtures_dir}/{original_file}', f'{fixtures_dir}/{reduced_file}') == expected_diff
+    """Тестирует удаление данных из второго файла."""
+    expected_diff = load_expected_output(fixtures_dir, expected_file)
+    actual_diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, reduced_file))
+    formatted_actual_diff = format_stylish(actual_diff)  # Apply formatting to the result
+    assert formatted_actual_diff == expected_diff
 
 @pytest.mark.parametrize("original_file, changed_file, expected_file", [
     ("original_data.json", "different_types_data.json", "expected_diff_different_types.txt"),
     ("original_data.yaml", "different_types_data.yaml", "expected_diff_different_types.txt"),  # YAML files
 ])
 def test_different_types(original_file, changed_file, expected_file, fixtures_dir):
-    """Тестирование при изменении типов данных между файлами."""
-    with open(f'{fixtures_dir}/{expected_file}', 'r') as file:
-        expected_diff = file.read()
-    assert generate_diff(f'{fixtures_dir}/{original_file}', f'{fixtures_dir}/{changed_file}') == expected_diff
+    """Тестирует изменение типов данных между файлами."""
+    expected_diff = load_expected_output(fixtures_dir, expected_file)
+    actual_diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, changed_file))
+    formatted_actual_diff = format_stylish(actual_diff)  # Apply formatting to the result
+    assert formatted_actual_diff == expected_diff
+
+@pytest.mark.parametrize("original_file, changed_file, expected_file", [
+    ("nested_original.json", "nested_changed.json", "expected_diff_nested.txt"),
+    ("nested_original.yaml", "nested_changed.yaml", "expected_diff_nested.txt"),  # YAML files
+])
+def test_nested_simple(original_file, changed_file, expected_file, fixtures_dir):
+    """Тестирует вложенность структур, как в оригинальном примере задания."""
+    expected_diff = load_expected_output(fixtures_dir, expected_file)
+    actual_diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, changed_file))
+    formatted_actual_diff = format_stylish(actual_diff)  # Apply formatting to the result
+    assert formatted_actual_diff == expected_diff
