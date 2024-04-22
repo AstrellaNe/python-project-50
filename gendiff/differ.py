@@ -2,9 +2,13 @@ import json
 import yaml
 from typing import Any, Dict, Optional
 from gendiff.loader import load_file  # Импорт загрузки файла
+from gendiff.formatters.stylish import _format_tree as format_stylish
+from gendiff.formatters.plain import _format_tree as format_plain
 
 
-def generate_diff(file_path1: str, file_path2: str) -> Optional[Dict[str, Any]]:
+# 80 знаков в линтере - это извращение!!!!!
+def generate_diff(file_path1: str, file_path2: str,
+                  format_name: str = 'stylish') -> Optional[str]:
     try:
         data1 = load_file(file_path1)
         data2 = load_file(file_path2)
@@ -14,19 +18,29 @@ def generate_diff(file_path1: str, file_path2: str) -> Optional[Dict[str, Any]]:
     except (json.JSONDecodeError, yaml.YAMLError, ValueError) as e:
         print(f"Ошибка при обработке файла: {e}")
         return None
-    return create_diff(data1, data2)
+
+    # Создается диффер без форматирования
+    structured_diff = create_diff(data1, data2)
+
+    # Применяем форматтер
+    if format_name == 'plain':
+        return format_plain(structured_diff)
+    elif format_name == 'stylish':
+        return format_stylish(structured_diff)
+    else:
+        print(f"Ошибка: Неизвестный формат '{format_name}'")
+        return None
 
 
-def create_diff(data1, data2):
+def create_diff(data1: Dict[str, Any], data2: Dict[str, Any]) -> Dict[str, Any]:
     diff = {}
     all_keys = sorted(data1.keys() | data2.keys())
 
     for key in all_keys:
         if key in data1 and key in data2:
             if isinstance(data1[key], dict) and isinstance(data2[key], dict):
-                diff[key] = {'status': 'nested', 'children':
-                             create_diff(data1[key], data2[key])}
-                #  присваиваем 'nested'
+                diff[key] = {'status': 'nested',
+                             'children': create_diff(data1[key], data2[key])}
             elif data1[key] == data2[key]:
                 diff[key] = {'status': 'unchanged', 'value': data1[key]}
             else:
