@@ -6,6 +6,9 @@
 
 ## Видео с примерами работы пакета
 
+**Пример работы форматтеров Plain и Stylish**
+[![asciicast](https://asciinema.org/a/vE6SCX1Zk25hjAXImyS3TckB9.svg)](https://asciinema.org/a/vE6SCX1Zk25hjAXImyS3TckB9)
+
 **Простое сравнение двух файлов формат JSON и вызов помощи**
 [![asciicast](https://asciinema.org/a/DfCMzLrpG3Gc2JdQ4WinhhCPD.svg)](https://asciinema.org/a/DfCMzLrpG3Gc2JdQ4WinhhCPD)
 
