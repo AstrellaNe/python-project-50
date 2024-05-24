@@ -1,4 +1,5 @@
 /.venv/
+/.vscode/
 /old_ver/
 /dist/
 **/__pycache__/
