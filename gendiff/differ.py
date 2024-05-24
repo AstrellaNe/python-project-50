@@ -4,14 +4,15 @@ from typing import Any, Dict, Optional
 from gendiff.loader import load_file  # Импорт загрузки файла
 from gendiff.formatters.stylish import _format_tree as format_stylish
 from gendiff.formatters.plain import _format_tree as format_plain
+from gendiff.formatters.json import _format_tree as format_json
 
 
 # 80 знаков в линтере - это извращение!!!!!
-def generate_diff(file_path1: str, file_path2: str,
-                  format_name: str = 'stylish') -> Optional[str]:
+def load_data(file_path1: str, file_path2: str) -> Optional[Dict[str, Any]]:
     try:
         data1 = load_file(file_path1)
         data2 = load_file(file_path2)
+        return {'data1': data1, 'data2': data2}
     except FileNotFoundError as e:
         print(f"Ошибка: файл не найден - {e.filename}")
         return None
@@ -19,17 +20,27 @@ def generate_diff(file_path1: str, file_path2: str,
         print(f"Ошибка при обработке файла: {e}")
         return None
 
-    # Создается диффер без форматирования
-    structured_diff = create_diff(data1, data2)
 
-    # Применяем форматтер
+def apply_formatter(diff: Dict[str, Any], format_name: str) -> Optional[str]:
     if format_name == 'plain':
-        return format_plain(structured_diff)
+        return format_plain(diff)
     elif format_name == 'stylish':
-        return format_stylish(structured_diff)
+        return format_stylish(diff)
+    elif format_name == 'json':
+        return format_json(diff)
     else:
         print(f"Ошибка: Неизвестный формат '{format_name}'")
         return None
+
+
+def generate_diff(file_path1: str, file_path2: str,
+                  format_name: str = 'stylish') -> Optional[str]:
+    data = load_data(file_path1, file_path2)
+    if data is None:
+        return None
+
+    structured_diff = create_diff(data['data1'], data['data2'])
+    return apply_formatter(structured_diff, format_name)
 
 
 def create_diff(data1: Dict[str, Any], data2: Dict[str, Any]) -> Dict[str, Any]:

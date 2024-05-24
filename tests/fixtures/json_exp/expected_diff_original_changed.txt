@@ -1,0 +1,2 @@
+Property 'to_change' was updated. From 'string' to ['list']
+Property 'to_remove' was removed
