@@ -1,2 +1,12 @@
-Property 'to_change' was updated. From 'string' to ['list']
-Property 'to_remove' was removed
+{
+    "to_change": {
+        "status": "changed",
+        "old_value": "string",
+        "new_value": [
+            "list"
+        ]
+    },
+    "to_remove": {
+        "status": "removed"
+    }
+}

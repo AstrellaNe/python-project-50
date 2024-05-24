@@ -1,2 +1,8 @@
-Property 'to_change' was removed
-Property 'to_remove' was removed
+{
+    "to_change": {
+        "status": "removed"
+    },
+    "to_remove": {
+        "status": "removed"
+    }
+}

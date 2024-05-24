@@ -1,11 +1,11 @@
 import os
 import pytest
 from gendiff.scripts.gendiff import generate_diff
-from gendiff.formatters.plain import _format_tree as format_plain
+from gendiff.formatters.json import _format_tree as format_json
 
 # Вспомогательная функция для загрузки ожидаемого вывода
 def load_expected_output(fixtures_dir, filename):
-    file_path = os.path.join(fixtures_dir, 'plain_exp', filename)
+    file_path = os.path.join(fixtures_dir, 'json_exp', filename)
     with open(file_path, 'r') as file:
         return file.read().strip()
 
@@ -16,14 +16,14 @@ def load_expected_output(fixtures_dir, filename):
 def test_generate_diff(original_file, changed_file, expected_file, fixtures_dir):
     """Тестирует диффер между двумя файлами."""
     expected_diff = load_expected_output(fixtures_dir, expected_file)
-    diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, changed_file), format_name='plain')
+    diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, changed_file), format_name='json')
     assert diff == expected_diff
 
 def test_no_file():
     """Тест при попытке обработки несуществующих файлов. Проверяет, что функция возвращает None."""
     path_to_nonexistent_file1 = 'nonexistent_file1.json'
     path_to_nonexistent_file2 = 'nonexistent_file2.json'
-    result = generate_diff(path_to_nonexistent_file1, path_to_nonexistent_file2, format_name='plain')
+    result = generate_diff(path_to_nonexistent_file1, path_to_nonexistent_file2, format_name='json')
     assert result is None, "Ожидалось, что функция вернёт None для несуществующих файлов"
 
 @pytest.mark.parametrize("original_file, expected_file", [
@@ -33,7 +33,7 @@ def test_no_file():
 def test_identical_files(original_file, expected_file, fixtures_dir):
     """Тестирует случай с двумя идентичными файлами."""
     expected_diff = load_expected_output(fixtures_dir, expected_file)
-    diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, original_file), format_name='plain')
+    diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, original_file), format_name='json')
     assert diff == expected_diff
 
 @pytest.mark.parametrize("original_file, changed_file, expected_file", [
@@ -43,7 +43,7 @@ def test_identical_files(original_file, expected_file, fixtures_dir):
 def test_added_data(original_file, changed_file, expected_file, fixtures_dir):
     """Тестирует добавление данных во второй файл."""
     expected_diff = load_expected_output(fixtures_dir, expected_file)
-    diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, changed_file), format_name='plain')
+    diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, changed_file), format_name='json')
     assert diff == expected_diff
 
 @pytest.mark.parametrize("original_file, reduced_file, expected_file", [
@@ -53,7 +53,7 @@ def test_added_data(original_file, changed_file, expected_file, fixtures_dir):
 def test_removed_data(original_file, reduced_file, expected_file, fixtures_dir):
     """Тестирует удаление данных из второго файла."""
     expected_diff = load_expected_output(fixtures_dir, expected_file)
-    diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, reduced_file), format_name='plain')
+    diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, reduced_file), format_name='json')
     assert diff == expected_diff
 
 @pytest.mark.parametrize("original_file, changed_file, expected_file", [
@@ -63,7 +63,7 @@ def test_removed_data(original_file, reduced_file, expected_file, fixtures_dir):
 def test_different_types(original_file, changed_file, expected_file, fixtures_dir):
     """Тестирует изменение типов данных между файлами."""
     expected_diff = load_expected_output(fixtures_dir, expected_file)
-    diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, changed_file), format_name='plain')
+    diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, changed_file), format_name='json')
     assert diff == expected_diff
 
 @pytest.mark.parametrize("original_file, changed_file, expected_file", [
@@ -73,5 +73,5 @@ def test_different_types(original_file, changed_file, expected_file, fixtures_di
 def test_nested_simple(original_file, changed_file, expected_file, fixtures_dir):
     """Тестирует вложенность структур, как в оригинальном примере задания."""
     expected_diff = load_expected_output(fixtures_dir, expected_file)
-    diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, changed_file), format_name='plain')
+    diff = generate_diff(os.path.join(fixtures_dir, original_file), os.path.join(fixtures_dir, changed_file), format_name='json')
     assert diff == expected_diff

@@ -1,11 +1,68 @@
-Property 'common.follow' was added with value: false
-Property 'common.setting2' was removed
-Property 'common.setting3' was updated. From true to null
-Property 'common.setting4' was added with value: 'blah blah'
-Property 'common.setting5' was added with value: [complex value]
-Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
-Property 'common.setting6.ops' was added with value: 'vops'
-Property 'group1.baz' was updated. From 'bas' to 'bars'
-Property 'group1.nest' was updated. From [complex value] to 'str'
-Property 'group2' was removed
-Property 'group3' was added with value: [complex value]
+{
+    "common": {
+        "status": "nested",
+        "children": {
+            "common.follow": {
+                "status": "added",
+                "value": "false"
+            },
+            "common.setting2": {
+                "status": "removed"
+            },
+            "common.setting3": {
+                "status": "changed",
+                "old_value": "true",
+                "new_value": "null"
+            },
+            "common.setting4": {
+                "status": "added",
+                "value": "blah blah"
+            },
+            "common.setting5": {
+                "status": "added",
+                "value": "[complex value]"
+            },
+            "common.setting6": {
+                "status": "nested",
+                "children": {
+                    "common.setting6.doge": {
+                        "status": "nested",
+                        "children": {
+                            "common.setting6.doge.wow": {
+                                "status": "changed",
+                                "old_value": "",
+                                "new_value": "so much"
+                            }
+                        }
+                    },
+                    "common.setting6.ops": {
+                        "status": "added",
+                        "value": "vops"
+                    }
+                }
+            }
+        }
+    },
+    "group1": {
+        "status": "nested",
+        "children": {
+            "group1.baz": {
+                "status": "changed",
+                "old_value": "bas",
+                "new_value": "bars"
+            },
+            "group1.nest": {
+                "status": "changed",
+                "old_value": "[complex value]",
+                "new_value": "str"
+            }
+        }
+    },
+    "group2": {
+        "status": "removed"
+    },
+    "group3": {
+        "status": "added",
+        "value": "[complex value]"
+    }
+}
