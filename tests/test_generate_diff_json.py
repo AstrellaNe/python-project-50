@@ -1,7 +1,7 @@
 import os
 import pytest
 from gendiff.scripts.gendiff import generate_diff
-from gendiff.formatters.json import _format_tree as format_json
+
 
 # Вспомогательная функция для загрузки ожидаемого вывода
 def load_expected_output(fixtures_dir, filename):
@@ -9,6 +9,11 @@ def load_expected_output(fixtures_dir, filename):
     with open(file_path, 'r') as file:
         return file.read().strip()
 
+@pytest.fixture
+def fixtures_dir():
+    return os.path.join(os.path.dirname(__file__), 'fixtures')
+
+# ВНИМАНИЕ CHANGED_DATA специально YML, а не YAML!!!! 
 @pytest.mark.parametrize("original_file, changed_file, expected_file", [
     ("original_data.json", "changed_data.json", "expected_diff_original_changed.txt"),
     ("original_data.yaml", "changed_data.yml", "expected_diff_original_changed.txt"),

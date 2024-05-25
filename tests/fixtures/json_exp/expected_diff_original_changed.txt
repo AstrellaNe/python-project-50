@@ -1,10 +1,8 @@
 {
     "to_change": {
         "status": "changed",
-        "old_value": "string",
-        "new_value": [
-            "list"
-        ]
+        "old_value": "'string'",
+        "new_value": "['list']"
     },
     "to_remove": {
         "status": "removed"

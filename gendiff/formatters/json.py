@@ -9,9 +9,9 @@ def stringify(value):
     elif isinstance(value, dict):
         return '[complex value]'
     elif isinstance(value, str):
-        return value
+        return f"'{value}'"
     else:
-        return value
+        return str(value)
 
 
 def format_json(diff, path=''):

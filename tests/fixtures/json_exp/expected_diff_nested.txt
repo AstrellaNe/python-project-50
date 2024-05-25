@@ -16,7 +16,7 @@
             },
             "common.setting4": {
                 "status": "added",
-                "value": "blah blah"
+                "value": "'blah blah'"
             },
             "common.setting5": {
                 "status": "added",
@@ -30,14 +30,14 @@
                         "children": {
                             "common.setting6.doge.wow": {
                                 "status": "changed",
-                                "old_value": "",
-                                "new_value": "so much"
+                                "old_value": "''",
+                                "new_value": "'so much'"
                             }
                         }
                     },
                     "common.setting6.ops": {
                         "status": "added",
-                        "value": "vops"
+                        "value": "'vops'"
                     }
                 }
             }
@@ -48,13 +48,13 @@
         "children": {
             "group1.baz": {
                 "status": "changed",
-                "old_value": "bas",
-                "new_value": "bars"
+                "old_value": "'bas'",
+                "new_value": "'bars'"
             },
             "group1.nest": {
                 "status": "changed",
                 "old_value": "[complex value]",
-                "new_value": "str"
+                "new_value": "'str'"
             }
         }
     },
