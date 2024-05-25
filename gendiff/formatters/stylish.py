@@ -18,7 +18,7 @@ def format_dict(value, depth):
     indent = ' ' * (depth * 4)
     for key, val in value.items():
         lines.append(f"{indent}    {key}: {stringify(val, depth + 1)}")
-    closing_indent = ' ' * ((depth - 1) * 4)
+    closing_indent = ' ' * (depth * 4)
     return '{\n' + '\n'.join(lines) + f'\n{closing_indent}}}'
 
 
