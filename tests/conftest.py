@@ -1,6 +1,7 @@
 import pytest
 import os
 
+
 # Фикстура для получения пути к директории с фикстурами
 @pytest.fixture
 def fixtures_dir():
