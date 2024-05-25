@@ -32,6 +32,7 @@ def apply_formatter(diff: Dict[str, Any], format_name: str) -> Optional[str]:
         print(f"Ошибка: Неизвестный формат '{format_name}'")
         return None
 
+
 def generate_diff(file_path1: str, file_path2: str,
                   format_name: str = 'stylish') -> Optional[str]:
     data = load_data(file_path1, file_path2)
