@@ -1,5 +1,5 @@
 import argparse
-from gendiff.differ import generate_diff
+from gendiff.differ_engine import generate_diff
 # Перенес импорт форматтеров в differ.py
 # Здесь происходит только обработка ком. строки
 
