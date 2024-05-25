@@ -12,7 +12,7 @@ def parse_arguments():
     parser.add_argument('file_path1', type=str, help='путь к первому файлу')
     parser.add_argument('file_path2', type=str, help='путь ко второму файлу')
     # Выбора форматтера
-    parser.add_argument('--format', type=str, default='stylish',
+    parser.add_argument('-f', '--format', type=str, default='stylish',
                         choices=['stylish', 'plain', 'json'],
                         help='формат вывода (stylish, plain, json),'
                         ' по умолчанию "stylish" ')
