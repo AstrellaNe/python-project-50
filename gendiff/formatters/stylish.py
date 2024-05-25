@@ -26,7 +26,9 @@ def format_dict(value, depth):
 
 def format_line(key, value, depth, status):
     """Форматирует строку с учетом статуса изменения."""
+    # Вычисляем базовый отступ на основе глубины
     base_indent = ' ' * (depth * 4 - 2)
+    # Определяем символ в начале строки
     symbol = '  '  # Пробелы для неизмененных элементов
     if status == 'added':
         symbol = '+ '
@@ -38,6 +40,7 @@ def format_line(key, value, depth, status):
         return (f"{base_indent}{symbol}{key}: {{\n"
                 f"{formatted_value}\n{base_indent}  }}")
     else:
+        # Для добавленных, удаленных и неизмененных используем одинаковый отступ
         formatted_value = stringify(value, depth)
         return f"{base_indent}{symbol}{key}: {formatted_value}"
 
