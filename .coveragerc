@@ -1,2 +1,27 @@
 [run]
-omit = conftest.py
+omit =
+    conftest.py
+    tests/*
+    .venv/*
+    .vscode/*
+    old_ver/*
+    dist/*
+    **/__pycache__/*
+    *.log
+    *.tmp
+
+[report]
+exclude_lines =
+    # Стандартное pragma: no cover
+    pragma: no cover
+
+    # Не учитывать код, который используется только для отладки
+    def __repr__
+    if self\.debug
+
+    # Не учитывать защитный код, который не вызывается в тестах
+    raise NotImplementedError
+    if __name__ == .__main__.:
+
+    # Не учитывать абстрактные методы
+    @abc\.abstractmethod
