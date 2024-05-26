@@ -1,6 +1,6 @@
 {
-    key: 'value'
-  - to_change: 'string'
+    key: value
+  - to_change: string
   + to_change: ['list']
-  - to_remove: 'gone'
+  - to_remove: gone
 }
