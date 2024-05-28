@@ -6,3 +6,11 @@
 /test/
 .coverage
 coverage.xml
+/gendiff/file1.json
+/gendiff/file1.yaml
+/gendiff/file1l.json
+/gendiff/file1nested.yaml
+/gendiff/file2.json
+/gendiff/file2.yml
+/gendiff/file2l.json
+/gendiff/file2nested.yaml
