@@ -34,33 +34,38 @@ def reduced_file(fixtures_dir):
 @pytest.fixture
 def expected_diff_original_changed(fixtures_dir):
     # Чтение файла с ожидаемыми результатами
-    with open(os.path.join(fixtures_dir, 'expected_diff_original_changed.txt'), 'r') as file:
+    with open(os.path.join(fixtures_dir,
+                           'expected_diff_original_changed.txt'), 'r') as file:
         return file.read()
 
 
 @pytest.fixture
 def expected_diff_identical_files(fixtures_dir):
     # Чтение файла с ожидаемыми результатами
-    with open(os.path.join(fixtures_dir, 'expected_diff_identical_files.txt'), 'r') as file:
+    with open(os.path.join(fixtures_dir,
+                           'expected_diff_identical_files.txt'), 'r') as file:
         return file.read()
 
 
 @pytest.fixture
 def expected_diff_added_data(fixtures_dir):
     # Чтение файла с ожидаемыми результатами
-    with open(os.path.join(fixtures_dir, 'expected_diff_added_data.txt'), 'r') as file:
+    with open(os.path.join(fixtures_dir,
+                           'expected_diff_added_data.txt'), 'r') as file:
         return file.read()
 
 
 @pytest.fixture
 def expected_diff_removed_data(fixtures_dir):
     # Чтение файла с ожидаемыми результатами
-    with open(os.path.join(fixtures_dir, 'expected_diff_removed_data.txt'), 'r') as file:
+    with open(os.path.join(fixtures_dir,
+                           'expected_diff_removed_data.txt'), 'r') as file:
         return file.read()
 
 
 @pytest.fixture
 def expected_diff_different_types(fixtures_dir):
     # Чтение файла с ожидаемыми результатами
-    with open(os.path.join(fixtures_dir, 'expected_diff_different_types.txt'), 'r') as file:
+    with open(os.path.join(fixtures_dir,
+                           'expected_diff_different_types.txt'), 'r') as file:
         return file.read()

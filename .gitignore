@@ -14,3 +14,6 @@ coverage.xml
 /gendiff/file2.yml
 /gendiff/file2l.json
 /gendiff/file2nested.yaml
+/tests/test_generate_diff_json.py
+/tests/test_generate_diff_stylish.py
+/tests/test_generate_diff_plain.py
