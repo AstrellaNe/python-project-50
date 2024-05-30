@@ -30,7 +30,6 @@ selfcheck:
 
 test-coverage:
 	poetry run pytest --cov=gendiff --cov-report xml
-	# cc-test-reporter after-build -t coverage.py
 
 git-prepare:
 	make build

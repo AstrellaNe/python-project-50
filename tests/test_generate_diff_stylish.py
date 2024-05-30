@@ -5,7 +5,7 @@ from gendiff.scripts.gendiff import generate_diff
 
 # Вспомогательная функция для загрузки ожидаемого вывода
 def load_expected_output(fixtures_dir, filename):
-    file_path = os.path.join(fixtures_dir, 'stylish_exp', filename)
+    file_path = os.path.join(fixtures_dir, 'stylish', filename)
     with open(file_path, 'r') as file:
         return file.read().strip()
 

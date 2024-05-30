@@ -10,37 +10,40 @@
 
 ## Установка
 
-\`\`\`bash
+Примечание: для проект тестировался на версяих Python не ниже 3.10. Рекомендуется установка Python 3.12. Работоспособность на версиях ниже не гарантируется.
+Примечание: для работы с проекто требуется версия Poetry не ниже version 1.2.2
+
+```bash
 git clone https://github.com/AstrellaNe/python-project-50.git
 cd python-project-50
 make install
-\`\`\`
+```
 
 ## Использование
 
 ### Сравнение двух файлов с выводом различий в формате Stylish (по умолчанию)
 
-\`\`\`bash
+```bash
 gendiff path/to/file1 path/to/file2
-\`\`\`
+```
 
 ### Сравнение двух файлов с выводом различий в формате Plain
 
-\`\`\`bash
+```bash
 gendiff --format plain path/to/file1 path/to/file2
-\`\`\`
+```
 
 ### Сравнение двух файлов с выводом различий в формате JSON
 
-\`\`\`bash
+```bash
 gendiff --format json path/to/file1 path/to/file2
-\`\`\`
+```
 
 ### Вызов помощи
 
-\`\`\`bash
+```bash
 gendiff --help
-\`\`\`
+```
 
 ## Видео с примерами работы пакета
 
@@ -73,7 +76,7 @@ gendiff --help
 
 Примеры использования:
 
-\`\`\`bash
+```bash
 gendiff --format plain path/to/file1 path/to/file2
 gendiff --f json path/to/file1 path/to/file2
-\`\`\`
+```
