@@ -1,7 +1,7 @@
 import json
 import yaml
 from typing import Any, Dict, Optional
-from gendiff.loader import load_file  # Импорт загрузки файла
+from gendiff.loader import read_file  # Импорт загрузки файла
 from gendiff.formatters.stylish import _format_tree as format_stylish
 from gendiff.formatters.plain import _format_tree as format_plain
 from gendiff.formatters.json import _format_tree as format_json
@@ -10,8 +10,8 @@ from gendiff.formatters.json import _format_tree as format_json
 # 80 знаков в линтере - это извращение!!!!!
 def load_data(file_path1: str, file_path2: str) -> Optional[Dict[str, Any]]:
     try:
-        data1 = load_file(file_path1)
-        data2 = load_file(file_path2)
+        data1 = read_file(file_path1)
+        data2 = read_file(file_path2)
         return {'data1': data1, 'data2': data2}
     except FileNotFoundError as e:
         print(f"Ошибка: файл не найден - {e.filename}")
