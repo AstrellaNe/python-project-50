@@ -20,17 +20,21 @@ def parse_arguments():
 
 
 def main():
-    args = parse_arguments()
+    parser = argparse.ArgumentParser(description='Generate diff')
+    parser.add_argument('first_file')
+    parser.add_argument('second_file')
+    parser.add_argument('-f', '--format', default='stylish',
+                        help='set format of output')
 
-    # Generate and format the diff
-    formatted_diff = generate_diff(args.file_path1, args.file_path2,
-                                   args.format)
+    args = parser.parse_args()
 
-    if formatted_diff is None:
-        print("Ошибка: Не удалось сгенерировать различия между файлами."
-              "Проверьте пути и доступность файлов.")
-    else:
-        print(formatted_diff)
+    try:
+        diff = generate_diff(args.first_file, args.second_file,
+                             args.format)
+        if diff is not None:
+            print(diff)
+    except ValueError as e:
+        print(e)
 
 
 if __name__ == '__main__':
