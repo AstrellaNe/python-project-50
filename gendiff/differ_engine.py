@@ -2,9 +2,9 @@ import json
 import yaml
 from typing import Any, Dict, Optional
 from gendiff.loader import read_file
-from gendiff.formatters.stylish import _format_tree as format_stylish
-from gendiff.formatters.plain import _format_tree as format_plain
-from gendiff.formatters.json import _format_tree as format_json
+from gendiff.formatters.stylish import format_tree as format_stylish
+from gendiff.formatters.plain import format_tree as format_plain
+from gendiff.formatters.json import format_tree as format_json
 
 
 def load_data(file_path1: str, file_path2: str) -> Optional[Dict[str, Any]]:

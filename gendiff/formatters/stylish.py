@@ -22,42 +22,57 @@ def format_dict(value, depth):
     return '{\n' + '\n'.join(lines) + f'\n{closing_indent}}}'
 
 
+def format_diff(diff, depth=1):
+    """Формирует отформатированное представление различий."""
+    lines = []
+    for key, value in sorted(diff.items()):
+        lines.append(format_node(key, value, depth))
+    return '\n'.join(lines)
+
+
+def format_node(key, value, depth):
+    """Форматирует узел в зависимости от его статуса."""
+    status = value.get('status')
+    if status in ['added', 'removed', 'unchanged']:
+        return format_line(key, value['value'], depth, status)
+    elif status == 'changed':
+        return format_changed_node(key, value, depth)
+    elif status == 'nested':
+        return format_line(key, value, depth, 'nested')
+    else:
+        raise ValueError(f"Unknown status: {status}")
+
+
+def format_changed_node(key, value, depth):
+    """Форматирует измененный узел (added и removed)."""
+    old_value = format_line(key, value['old_value'], depth, 'removed')
+    new_value = format_line(key, value['new_value'], depth, 'added')
+    return f"{old_value}\n{new_value}"
+
+
 def format_line(key, value, depth, status):
     """Форматирует строку с учетом статуса изменения."""
-    # Вычисляем базовый отступ на основе глубины
     base_indent = ' ' * (depth * 4 - 2)
-    # Определяем символ в начале строки
-    symbol = '  '  # Пробелы для неизмененных элементов
-    if status == 'added':
-        symbol = '+ '
-    elif status == 'removed':
-        symbol = '- '
+    symbol = get_symbol(status)
 
     if status == 'nested':
         formatted_value = format_diff(value['children'], depth + 1)
         return (f"{base_indent}{symbol}{key}: {{\n"
                 f"{formatted_value}\n{base_indent}  }}")
     else:
-        # Для добавленных, удаленных и неизмененных используем одинаковый отступ
         formatted_value = stringify(value, depth)
         return f"{base_indent}{symbol}{key}: {formatted_value}"
 
 
-def format_diff(diff, depth=1):
-    """Формирует отформатированное представление различий."""
-    lines = []
-    for key, value in sorted(diff.items()):
-        status = value.get('status')
-        if status in ['added', 'removed', 'unchanged']:
-            lines.append(format_line(key, value['value'], depth, status))
-        elif status == 'changed':
-            lines.append(format_line(key, value['old_value'], depth, 'removed'))
-            lines.append(format_line(key, value['new_value'], depth, 'added'))
-        else:  # 'nested'
-            lines.append(format_line(key, value, depth, 'nested'))
-    return '\n'.join(lines)
+def get_symbol(status):
+    """Возвращает символ для строки на основе статуса."""
+    if status == 'added':
+        return '+ '
+    elif status == 'removed':
+        return '- '
+    return '  '
 
 
-def _format_tree(diff):
+def format_tree(diff):
     """Возвращает строковое представление дерева различий."""
     return '{\n' + format_diff(diff, 1) + '\n}'
