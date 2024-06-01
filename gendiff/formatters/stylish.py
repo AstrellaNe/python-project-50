@@ -19,7 +19,7 @@ def format_dict(value, depth):
     for key, val in value.items():
         lines.append(f"{indent}    {key}: {stringify(val, depth + 1)}")
     closing_indent = ' ' * (depth * 4)
-    return '{\n' + '\n'.join(lines) + f'\n{closing_indent}}}'
+    return '{\n' + '\n'.join(lines) + '\n' + closing_indent + '}'
 
 
 def format_diff(diff, depth=1):
@@ -75,4 +75,5 @@ def get_symbol(status):
 
 def format_tree(diff):
     """Возвращает строковое представление дерева различий."""
-    return '{\n' + format_diff(diff, 1) + '\n}'
+    formatted_diff = format_diff(diff, 1)
+    return '{\n' + formatted_diff + '\n}'
