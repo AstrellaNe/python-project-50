@@ -96,3 +96,40 @@ gendiff --help
 gendiff --format plain path/to/file1 path/to/file2
 gendiff --f json path/to/file1 path/to/file2
 ```
+
+## Пример структуры и логики форматтера stylish
+graph TD;
+    A[Start] --> B{stringify(value, depth)}
+    
+    B --> |dict| C[format_dict(value, depth)]
+    B --> |bool| D[Convert to string ('true'/'false')]
+    B --> |None| E[Convert to 'null']
+    B --> |other types| F[Convert to string]
+    
+    C --> G[Nested Values]
+    G --> H[format_tree(diff)]
+    
+    H --> I[format_diff(diff, depth)]
+    
+    I --> J[Iterate sorted keys]
+    J --> K{format_node(key, value, depth)}
+    
+    K --> |added| L[format_line(key, value, depth, 'added')]
+    K --> |removed| M[format_line(key, value, depth, 'removed')]
+    K --> |unchanged| N[format_line(key, value, depth, 'unchanged')]
+    K --> |changed| O[format_changed_node(key, value, depth)]
+    K --> |nested| P[format_line(key, value, depth, 'nested')]
+    
+    O --> Q[old_value] --> R[format_line(key, old_value, depth, 'removed')]
+    O --> S[new_value] --> T[format_line(key, new_value, depth, 'added')]
+    
+    L --> U[stringify]
+    M --> U
+    N --> U
+    P --> V[format_diff(value['children'], depth + 1)]
+    R --> U
+    T --> U
+    
+    U --> W[get_symbol(status)]
+    
+    W --> X[Return symbol]
