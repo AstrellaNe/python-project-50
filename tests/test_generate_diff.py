@@ -2,7 +2,6 @@ import pytest
 from gendiff.scripts.gendiff import generate_diff
 
 
-# Параметризованные тесты (все скопом)
 @pytest.mark.parametrize(
     "formatter, test_case, file1, file2, expected_dir, expected_file_suffix",
     [
@@ -40,17 +39,13 @@ from gendiff.scripts.gendiff import generate_diff
 )
 def test_generate_diff(
         formatter, test_case, file1, file2, expected_dir, expected_file_suffix):
-    # Определение путей к файлам данных
     file1_path = f'tests/fixtures/{file1}'
     file2_path = f'tests/fixtures/{file2}'
     expected_path = f'tests/fixtures/{expected_dir}/{expected_file_suffix}'
 
-    # Генерация результата
     result = generate_diff(file1_path, file2_path, formatter)
 
-    # Чтение ожидаемого результата
     with open(expected_path) as ef:
         expected = ef.read().strip()
 
-    # Проверка результата
     assert result.strip() == expected

@@ -36,10 +36,6 @@ jobs:
         make lint
 
     # Запуск тестов и запись кода завершения
-    - name: Run pytest
-      run: |
-            make test
-
     - name: Test & publish code coverage
       uses: paambaati/codeclimate-action@v5.0.0
       if: github.ref_name == 'main'

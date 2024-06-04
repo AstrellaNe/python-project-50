@@ -1,40 +1,40 @@
 import argparse
+import json
+import yaml
 from gendiff.differ_engine import generate_diff
-# Перенес импорт форматтеров в differ.py
-# Здесь происходит только обработка ком. строки
 
 
 def parse_arguments():
     # Создаем парсер аргументов командной строки
     parser = argparse.ArgumentParser(description='Создает различия между двумя \
 файлами')
+
     # Добавляем аргументы для путей к файлам в хэлп
     parser.add_argument('file_path1', type=str, help='путь к первому файлу')
     parser.add_argument('file_path2', type=str, help='путь ко второму файлу')
+
     # Выбора форматтера
     parser.add_argument('-f', '--format', type=str, default='stylish',
                         choices=['stylish', 'plain', 'json'],
                         help='формат вывода (stylish, plain, json),'
                         ' по умолчанию "stylish" ')
+
     return parser.parse_args()
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Generate diff')
-    parser.add_argument('first_file')
-    parser.add_argument('second_file')
-    parser.add_argument('-f', '--format', default='stylish',
-                        help='set format of output')
-
-    args = parser.parse_args()
-
     try:
-        diff = generate_diff(args.first_file, args.second_file,
-                             args.format)
-        if diff is not None:
-            print(diff)
-    except ValueError as e:
-        print(e)
+        args = parse_arguments()
+        diff = generate_diff(args.file_path1, args.file_path2, args.format)
+    except FileNotFoundError as e:
+        print(f"Ошибка: файл не найден - {e.filename}")
+        return
+    except (json.JSONDecodeError, yaml.YAMLError, ValueError) as e:
+        print(f"Ошибка при обработке файла: {e}")
+        return
+
+    if diff is not None:
+        print(diff)
 
 
 if __name__ == '__main__':
